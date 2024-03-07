@@ -33,7 +33,7 @@ return [
     'connections' => [
         'mysql' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
+            'host' => '193.203.175.50',
             'database' => 'u391517370_bancodedados',
             'username' => 'u391517370_bancodedados',
             'password' => 'Zx]l]cs$0lS$'

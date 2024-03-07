@@ -13,16 +13,8 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
-$router->get('/teste', function () use ($router) {
-
-    $log = new App\Models\Logs();
-
-    echo "<pre>";
-    print_r($log->get());
-
-    
+$router->group(['prefix' => 'v1'], function () use ($router) {
+    $router->group(["prefix" => "cron"], function () use ($router) {
+        $router->get('/processar', 'Rotina@processar');
+    });
 });
