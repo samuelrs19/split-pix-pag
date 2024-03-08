@@ -19,8 +19,8 @@ class Rotina extends BaseController
 
 
         if (count($list)) {
-
-            
+            foreach ($list as $item) {
+            }
         }
 
         $dataHoraFim = date('Y-m-d H:i:s');

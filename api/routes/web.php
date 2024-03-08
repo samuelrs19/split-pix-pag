@@ -17,4 +17,8 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
     $router->group(["prefix" => "cron"], function () use ($router) {
         $router->get('/processar', 'Rotina@processar');
     });
+    $router->group(["prefix" => "pix"], function () use ($router) {
+        $router->post("/config/webhook", "Efi@configWebHook");
+        $router->post("/cob", "Efi@envio");
+    });
 });
