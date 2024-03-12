@@ -6,25 +6,34 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 use Efi\Exception\EfiException;
 use Efi\EfiPay;
 use Exception;
+use App\Models\Credential_efi;
+use App\Models\Pix_credential;
 
 class Efi extends BaseController
 {
-    public function envio()
+    public function split($dadosPagamentos)
     {
+
         $options = $this->config();
+        $configSplit = $this->configSplit();
 
         $params = [
-            "idEnvio" => "0000000000000000000000000"
+            "idEnvio" => $dadosPagamentos['identificador']
         ];
 
+        $valor = $dadosPagamentos['valor'];
+        if ($configSplit['percentual'] > 0) {
+            $valor = ($dadosPagamentos['valor'] * $configSplit['percentual']) / 100;
+        }
+
         $body = [
-            "valor" => "0.01",
+            "valor" => $valor,
             "pagador" => [
-                "chave" => "47375685000114", // Pix key registered in the authenticated Efí account
-                "infoPagador" => "Order payment"
+                "chave" => $configSplit['pagador']['chave'],
+                "infoPagador" => $configSplit['pagador']['nome']
             ],
             "favorecido" => [
-                "chave" => "efipay@sejaefi.com.br" // Type key: random, email, phone, cpf or cnpj
+                "chave" => $configSplit['recebedor'][0]
             ]
         ];
 
@@ -71,48 +80,71 @@ class Efi extends BaseController
         } catch (Exception $e) {
             print_r($e->getMessage());
         }
-
     }
 
     private function config()
     {
         $sandbox = true; // false = Production | true = Homologation
 
-        /**
-         * Credentials of Production
-         */
-        $clientIdProd = "Client_Id_ecdcf900e56b743b6fe9f68b5942388e5080e835";
-        $clientSecretProd = "Client_Secret_b033cc9b8f060754ac3d8ad51dffe29e4863e409";
         $pathCertificateProd = realpath(__DIR__ . "/../../../storage/certificados/productionCertificate.p12"); // Absolute path to the certificate in .pem or .p12 format
-
-        /**
-         * Credentials of Homologation
-         */
-        $clientIdHomolog = "Client_Id_2cac2c436caa25fb149fb1ea200d380f9d4ec07f";
-        $clientSecretHomolog = "Client_Secret_7a30faf66365cbb0c48abd042cf2b79cb8dcda07";
         $pathCertificateHomolog = realpath(__DIR__ . "/../../../storage/certificados/developmentCertificate.p12"); // Absolute path to the certificate in .pem or .p12 format
+
+        $crencials = Credential_efi::where('status', 1)->first();
+
+        $clientId = "";
+        $clientSecret = "";
+        if ($crencials) {
+
+            $crencials = json_encode($crencials, 256);
+            $crencials = json_decode($crencials, true);
+
+            $clientId = $crencials['client_Id'];
+            $clientSecret = $crencials['client_Secret'];
+            $sandbox = $crencials['status'] == 1 ?? false;
+        }
 
         /**
          * Array with credentials for sending requests
          */
-        $options = [
-            "clientId" => ($sandbox) ? $clientIdHomolog : $clientIdProd,
-            "clientSecret" => ($sandbox) ? $clientSecretHomolog : $clientSecretProd,
-            "certificate" => ($sandbox) ? $pathCertificateHomolog : $pathCertificateProd,
-            "pwdCertificate" => "", // Optional | Default = ""
-            "sandbox" => $sandbox, // Optional | Default = false
-            "debug" => false, // Optional | Default = false
-            "timeout" => 30, // Optional | Default = 30
-        ];
 
         return [
-            "clientId" => ($sandbox) ? $clientIdHomolog : $clientIdProd,
-            "clientSecret" => ($sandbox) ? $clientSecretHomolog : $clientSecretProd,
+            "clientId" => $clientId,
+            "clientSecret" => $clientSecret,
             "certificate" => ($sandbox) ? $pathCertificateHomolog : $pathCertificateProd,
             "pwdCertificate" => "", // Optional | Default = ""
             "sandbox" => $sandbox, // Optional | Default = false
             "debug" => false, // Optional | Default = false
             "timeout" => 30, // Optional | Default = 30
         ];
+    }
+
+    private function configSplit()
+    {
+        $return = [
+            "pagador" => [
+                "chave" => "",
+                "nome" => ""
+            ],
+            "percentual" => 100,
+            "recebedor" => []
+        ];
+
+        $confiPay = Pix_credential::where('status', 1)->first();
+
+        if ($confiPay) {
+            $confiPay = json_encode($confiPay, 256);
+            $confiPay = json_decode($confiPay, true);
+
+            $return['pagador']['chave'] = $confiPay['payer_key'];
+            $return['pagador']['nome'] = $confiPay['payer_name'];
+            $return['percentual'] = $confiPay['percentage'];
+
+            $return['recebedor'][] = $confiPay['key_favored_one'];
+            if (!empty($confiPay['key_favored_two'])) {
+                $return['recebedor'][] = $confiPay['key_favored_two'];
+            }
+        }
+
+        return $return;
     }
 }

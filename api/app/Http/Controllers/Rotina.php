@@ -33,4 +33,15 @@ class Rotina extends BaseController
         $log->date = date('Y-m-d H:i:s');
         $log->save();
     }
+
+    public function salvarLog(Request $request)
+    {
+        $postEfi = $request->all();
+
+        $log = new Logs();
+        $log->origin = 'Post - Efí';
+        $log->description = json_encode($postEfi, 256);
+        $log->date = date('Y-m-d H:i:s');
+        $log->save();
+    }
 }

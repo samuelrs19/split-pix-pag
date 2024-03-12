@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Logs extends Model
+class Credential_efi extends Model
 {
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $table = 'logs';
+    protected $table = 'credential_efi';
     protected $fillable = [
-        'id', 'origin', 'description', 'date'
+        'id', 'client_Id', 'client_Secret', 'environment'
     ];
     public $timestamps = false;
 }
