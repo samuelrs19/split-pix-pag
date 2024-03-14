@@ -23,7 +23,7 @@ class Rotina extends BaseController
 
         $list = [
             [
-                "id" => 45,
+                "id" => 46,
                 "total_amount" => '4.00'
             ],
             // [
@@ -47,12 +47,12 @@ class Rotina extends BaseController
                         "pagamento" => $split
                     ];
 
-                    OrderList::where('id', $item['id'])->update(['split_status' => $split['status'], 'split_infor' => json_encode($json, 256), 'split_data_notify' => date('Y-m-d H:i:s')]);
+                    OrderList::where('id', $item['id'])->update(['split_status' => $split['status'], 'split_infor' => json_encode($json, 256)]);
                 } else {
                     $json = [
                         "pagamento" => $split
                     ];
-                    OrderList::where('id', $item['id'])->update(['split_status' => 'ERROR', 'split_infor' => json_encode($json, 256), 'split_data_notify' => date('Y-m-d H:i:s')]);
+                    OrderList::where('id', $item['id'])->update(['split_status' => 'ERROR', 'split_infor' => json_encode($json, 256)]);
                 }
             }
         }
@@ -98,7 +98,7 @@ class Rotina extends BaseController
 
                         $json = json_encode($array, 256);
 
-                        OrderList::where('id', $notificacao['gnExtras']['idEnvio'])->update(["split_status" => $notificacao['status'], "split_infor" => $json]);
+                        OrderList::where('id', $notificacao['gnExtras']['idEnvio'])->update(["split_status" => $notificacao['status'], "split_infor" => $json, 'split_data_notify' => date('Y-m-d H:i:s')]);
                     }
                 }
             }

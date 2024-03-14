@@ -27,7 +27,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://olhonopremio.com/api/v1/pix/webhook/processar',
+  CURLOPT_URL => 'https://olhonopremio.com/api/v1/pix/webhook/notificacao',
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,
