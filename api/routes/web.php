@@ -20,6 +20,6 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
     $router->group(["prefix" => "pix"], function () use ($router) {
         $router->post("/config/webhook", "Efi@configWebHook");
         $router->post("/cob", "Efi@split");
-        $router->post("/webhook/log", "Rotina@salvarLog");
+        $router->post("/webhook/notificacao", "Rotina@notificacao");
     });
 });

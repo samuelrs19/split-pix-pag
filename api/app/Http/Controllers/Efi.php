@@ -18,16 +18,19 @@ class Efi extends BaseController
         $configSplit = $this->configSplit();
 
         $params = [
-            "idEnvio" => $dadosPagamentos['identificador']
+            "idEnvio" => $dadosPagamentos['id']
         ];
 
-        $valor = $dadosPagamentos['valor'];
+        $valor = $dadosPagamentos['total_amount'];
         if ($configSplit['percentual'] > 0) {
-            $valor = ($dadosPagamentos['valor'] * $configSplit['percentual']) / 100;
+            $valor = ($dadosPagamentos['total_amount'] * $configSplit['percentual']) / 100;
         }
 
+        // $valor = round($valor, 2);
+        $valor = number_format($valor, 2, '.', '');
+
         $body = [
-            "valor" => $valor,
+            "valor" => "$valor",
             "pagador" => [
                 "chave" => $configSplit['pagador']['chave'],
                 "infoPagador" => $configSplit['pagador']['nome']
@@ -39,15 +42,15 @@ class Efi extends BaseController
 
         try {
             $api = new EfiPay($options);
-            $response = $api->pixSend($params, $body);
-
-            echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            return $api->pixSend($params, $body);
         } catch (EfiException $e) {
-            print_r($e->code . "<br>");
-            print_r($e->error . "<br>");
-            print_r($e->errorDescription) . "<br>";
+            // print_r($e->code . "<br>");
+            // print_r($e->error . "<br>");
+            // print_r($e->errorDescription) . "<br>";
+            return json_encode($e, 256);
         } catch (Exception $e) {
-            print_r($e->getMessage());
+            // print_r($e->getMessage());
+            return ['msg' => $e->getMessage()] ;
         }
     }
 

@@ -1,5 +1,10 @@
 <?php
+$url = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
+$host = "localhost";
+if ($url == 'localhost') {
+    $host = "193.203.175.50";
+}
 return [
 
     /*
@@ -33,7 +38,7 @@ return [
     'connections' => [
         'mysql' => [
             'driver' => 'mysql',
-            'host' => '193.203.175.50',
+            'host' => $host,
             'database' => 'u391517370_bancodedados',
             'username' => 'u391517370_bancodedados',
             'password' => 'Zx]l]cs$0lS$'

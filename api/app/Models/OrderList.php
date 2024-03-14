@@ -35,7 +35,9 @@ class OrderList extends Model
         'whatsapp_status',
         'dwapi_status',
         'referral_id',
-        'split_account'
+        'split_status',
+        'split_infor',
+        'split_data_notify'
     ];
     public $timestamps = false;
 }
