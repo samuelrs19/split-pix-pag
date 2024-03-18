@@ -47,10 +47,15 @@ class Efi extends BaseController
             // print_r($e->code . "<br>");
             // print_r($e->error . "<br>");
             // print_r($e->errorDescription) . "<br>";
-            return json_encode($e, 256);
+            return [
+                'status' => 'ERROR',
+                'statusCod' => $e->code,
+                'msg' => $e->error,
+                'descricao' => $e->errorDescription
+            ];
         } catch (Exception $e) {
             // print_r($e->getMessage());
-            return ['msg' => $e->getMessage()] ;
+            return ['msg' => $e->getMessage()];
         }
     }
 

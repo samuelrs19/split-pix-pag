@@ -2,7 +2,7 @@
 $url = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 
 $host = "localhost";
-if ($url == 'localhost') {
+if ($url == 'localhost' || $url == 'localhost:8080') {
     $host = "193.203.175.50";
 }
 return [

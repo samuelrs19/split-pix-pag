@@ -21,20 +21,21 @@ class Rotina extends BaseController
             ->get();
 
 
-        $list = [
-            [
-                "id" => 46,
-                "total_amount" => '4.00'
-            ],
-            // [
-            //     "id" => 62,
-            //     "total_amount" => '5.00'
-            // ],
-            // [
-            //     "id" => 63,
-            //     "total_amount" => '15.50'
-            // ]
-        ];
+        // $list = [
+        //     [
+        //         "id" => 46,
+        //         "total_amount" => '4.00'
+        //     ],
+        // [
+        //     "id" => 62,
+        //     "total_amount" => '5.00'
+        // ],
+        // [
+        //     "id" => 63,
+        //     "total_amount" => '15.50'
+        // ]
+        // ];
+
 
         if (count($list)) {
             $efi = new Efi();
@@ -49,6 +50,7 @@ class Rotina extends BaseController
 
                     OrderList::where('id', $item['id'])->update(['split_status' => $split['status'], 'split_infor' => json_encode($json, 256)]);
                 } else {
+                    
                     $json = [
                         "pagamento" => $split
                     ];
