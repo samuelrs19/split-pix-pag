@@ -13,7 +13,7 @@ class Credential_efi extends Model
      */
     protected $table = 'credential_efi';
     protected $fillable = [
-        'id', 'client_Id', 'client_Secret', 'environment'
+        'id', 'client_Id', 'client_Secret', 'environment', 'status'
     ];
     public $timestamps = false;
 }

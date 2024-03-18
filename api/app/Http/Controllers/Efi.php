@@ -108,7 +108,9 @@ class Efi extends BaseController
 
             $clientId = $crencials['client_Id'];
             $clientSecret = $crencials['client_Secret'];
-            $sandbox = $crencials['status'] == 1 ?? false;
+            if ($crencials['environment'] == 'environment') {
+                $sandbox = false;
+            }
         }
 
         /**

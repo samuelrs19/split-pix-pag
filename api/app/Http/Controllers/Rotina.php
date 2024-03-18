@@ -20,23 +20,6 @@ class Rotina extends BaseController
             ->where('split_status', null)
             ->get();
 
-
-        // $list = [
-        //     [
-        //         "id" => 46,
-        //         "total_amount" => '4.00'
-        //     ],
-        // [
-        //     "id" => 62,
-        //     "total_amount" => '5.00'
-        // ],
-        // [
-        //     "id" => 63,
-        //     "total_amount" => '15.50'
-        // ]
-        // ];
-
-
         if (count($list)) {
             $efi = new Efi();
             foreach ($list as $item) {
